@@ -40,7 +40,6 @@ Open the `setup_framework.sql` script in the Snowflake UI. We'll take a walk thr
 Log into Snowflake with the `snowflake_user` account and the password specified in the script. 
 Open the `deploy_source.sql` script in the Snowflake UI. We'll take a walk through the script and describe what it is doing and why. Then we'll instruct them how to run it in one shot.
 
-
 ## Setting up AWS
 
 ### Deploy Foundational Components - Instructor Only
@@ -54,14 +53,13 @@ Talk about what Airflow is and why we're using it. Talk about how we could reall
 ## Running the Analytics Pipeline
 
 ### Code Walk Through - SQL and DAGs
+
 RDS/ECS will take about 10 minutes to launch. Use this time to walk through the Snowflake SQL and the Airflow DAGs used to automate it. 
 
 ### Run the Pipeline
+
 Launch Airflow on ECS Task public IP port 8080. Run the Source pipeline to load Source tables. Run Analytics pipeline to load Analytics tables. This will take some time to load. Go back to Snowflake and see the History tab, you can see Snowflake running the jobs and loading data. When it's done, Airflow UI will report success. We know it will since we've run this a billion times. Run a quick SQL query to see the data in the tables `query_analytics.sql`. Hey that's cool but we can do so much more, with Tableau!
 
 ## Run Tableau Desktop
 
 TABLEAU STUFF GOES HERE
-
-
-
