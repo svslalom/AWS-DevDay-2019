@@ -41,8 +41,6 @@ Open the `setup_framework.sql` script in the Snowflake UI. We'll take a walk thr
 3. Log out of your account by selecting the drop down menu on the top right of the window.
 ![alt text](images/image-04.png)
 
-#
-
 ### Deploy the Source Database Objects
 
 Log into Snowflake with the `snowflake_user` account and the password specified in the script. 
@@ -117,4 +115,4 @@ Launch Airflow on ECS Task public IP port 8080. Run the Source pipeline to load 
 
 ## Run Tableau Desktop
 
-TABLEAU STUFF GOES HERE
+Please click [here](https://snowflake-lab.s3-us-west-2.amazonaws.com/public/docs/AWS-Slalom-Snowflake-Tableau-DevDay-TableauDesktop-08.20.2019.pdf) to download the Tableau Desktop instructions, then please follow the instructions outlined in the document.
