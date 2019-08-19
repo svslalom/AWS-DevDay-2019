@@ -1,14 +1,12 @@
 # slalom-aws-devday-2019
 
-AWS Dev Day (AWS, Slalom, Snowflake, and Tableau)
-
-A high level description will go here. A high level description will go here. A high level description will go here. A high level description will go here. We'll mention some of the components in the architecture
+AWS DevDay is a half-day, hands-on technical event, delivered by APN Partners who have demonstrated technical proficiency and proven customer success in specialized solution areas. Deep dive into AWS-powered partner solutions with Slalom – learn how to deploy a modern data engineering and analytics solution on AWS using Snowflake, Tableau, and AWS native services. Technical experts will explain key features and use cases, share best practices, provide technical demos, and answer questions.
 
 ![alt text](https://slalom-aws-workshop-us-west-2.s3-us-west-2.amazonaws.com/content/images/awsdevday/aws-dev-day.png "AWS Dev Day Architecture")
 
 ## Overview
 
-The AWS Dev Day application demonstrates how to automate a Snowflake analytics pipeline running on Amazon Web Services. It is based on the [snowflake-on-ecs](https://github.com/SlalomBuild/snowflake-on-ecs) open-sourced framework from Slalom Build. Tableau Desktop is used to enable quick visualizations with your data.  The Dev Day activities are divided into the following sections:
+The AWS Dev Day application demonstrates how to automate a Snowflake analytics pipeline running on Amazon Web Services. It is based on the [snowflake-on-ecs](https://github.com/SlalomBuild/snowflake-on-ecs) analytics pipeline framework from Slalom Build. Tableau Desktop is used to enable quick visualizations with your data.  The Dev Day activities are divided into the following sections:
 
 - Getting Started
 - Setting up Snowflake
@@ -65,8 +63,6 @@ Open the `deploy_source.sql` script in the Snowflake UI. We'll take a walk throu
 ![alt text](images/image-08.png)
 5. We're now done with the initial Snowflake framework setup. Next, we'll be provisioning infrastructure in AWS that will allow us to run Airflow jobs to load these Snowflake tables with data.
 
-#
-
 ## Building the Pipeline in AWS
 
 ### Deploy Foundational Components - Instructor Only
@@ -105,7 +101,86 @@ The framework uses [Apache Airflow](https://airflow.apache.org/) for the workflo
 
 ### Code Walk Through - SQL and DAGs
 
-RDS/ECS will take about 10 minutes to launch. Use this time to walk through the Snowflake SQL and the Airflow DAGs used to automate it. 
+RDS/ECS will take about 10 minutes to launch. We'll use this time to walk through the Snowflake SQL and the Airflow DAGs used to automate it.
+
+1. Snowflake SQL Example
+    - Open the file located at `airflow/dags/sql/copy_source_nyc_taxi_raw.sql`
+    - This COPY command loads data from S3 into a Snowflake tables.
+    - Metadata attributes such as `filename` and `file_row_number` are captured automatically. 
+    - We also store the create process name and timestamp.
+
+    ```sql
+    copy into nyc_taxi_raw(vendorid, tpep_pickup_datetime, tpep_dropoff_datetime, passenger_count, trip_distance, 
+        pickup_longitude, pickup_latitude, ratecodeid, store_and_fwd_flag, pulocationid, dolocationid, payment_type, 
+        fare_amount, extra, mta_tax, tip_amount, tolls_amount, improvement_surcharge, total_amount, src_filename, 
+        src_file_row_num, create_process, create_ts
+    )
+    from (
+      select t.$1,t.$2,t.$3,t.$4,t.$5,t.$6,t.$7,t.$8,t.$9,t.$10,t.$11,t.$12,t.$13,t.$14,t.$15,t.$16,t.$17,t.$18,t.$19,
+      metadata$filename,
+      metadata$file_row_number,
+      'Airflow snowflake_source Dag',
+      convert_timezone('UTC' , current_timestamp )::timestamp_ntz
+      from @quickstart/nyc-taxi-data/ t
+    )
+    file_format= (format_name = csv);
+    ```
+
+2. Airflow DAG Example
+    - Open the file `airflow/dags/snowflake_source.py`
+    - Airflow DAGs are written in Python
+    - This DAG file constructs a pipeline for loading datasets from S3 into Snowflake
+    - A sequential workflow is shown here for demonstration purposes. We can also run tasks in parallel.
+
+    ```python
+    from datetime import timedelta
+
+    import airflow
+    from airflow import DAG
+    from airflow.contrib.operators.snowflake_operator import SnowflakeOperator
+
+    # These args will get passed on to each operator
+    # You can override them on a per-task basis during operator initialization
+    default_args = {
+        'owner': 'airflow',
+        'depends_on_past': False,
+        'start_date': airflow.utils.dates.days_ago(1),
+        'email': ['admin@example.com'],
+        'email_on_failure': False,
+        'email_on_retry': False,
+        'retries': 1,
+        'retry_delay': timedelta(minutes=5),
+    }
+
+    dag = DAG(
+        'snowflake_source',
+        default_args=default_args,
+        description='Snowflake source pipeline',
+        schedule_interval='0 */6 * * *',
+    )
+
+    t1 = SnowflakeOperator(
+        task_id='copy_source_airline_raw',
+        sql='sql/copy_source_airline_raw.sql',
+        snowflake_conn_id='snowflake_default',
+        warehouse='load_wh',
+        database='source',
+        autocommit=True,
+        dag=dag)
+
+    t2 = SnowflakeOperator(
+        task_id='copy_source_nyc_taxi_raw',
+        sql='sql/copy_source_nyc_taxi_rawql',
+        snowflake_conn_id='snowflake_default',
+        warehouse='load_wh',
+        database='source',
+        autocommit=True,
+        dag=dag)
+
+    t1 >> t2
+
+    ```
+
 
 ### Run the Pipeline
 
