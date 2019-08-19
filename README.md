@@ -8,22 +8,32 @@ A high level description will go here. A high level description will go here. A 
 
 ## Overview
 
-We'll mention the Dev Day is based on the `snowflake-on-ecs` open-sourced framework from Slalom Build. We'll talk about how we added in Tableau Desktop for the analytics consumption. We'll also include some bullets about what you will learn today. We'll ask them to think about how any of this applies to use cases they are currently working through. And, that we'll help them figure it out througout the course of the day. Ideally this is something they can take back to work / home and implement on their own.
+The AWS Dev Day application demonstrates how to automate a Snowflake analytics pipeline running on Amazon Web Services. It is based on the [snowflake-on-ecs](https://github.com/SlalomBuild/snowflake-on-ecs) open-sourced framework from Slalom Build. Tableau Desktop is used to enable quick visualizations with your data.  The Dev Day activities are divided into the following sections:
 
-- This is something you will learn
-- This is something you will learn
-- This is something you will learn
-- This is something you will learn
+- Getting Started
+- Setting up Snowflake
+- Building the Pipeline in AWS
+- Running the Pipeline
+- Visual Analytics with Tableau Desktop
 
 ## Getting Started
 
 ### Download the Code
 
-We'll have a link to the snowflake-on-ecs codebase HERE to keep it simple. Download it, unzip it somewhere you can find later. We'll mention the pre-requisites such as an active Snowflake Trial account. We'll talk about how we'll be using Slalom's AWS Workshop account that we use for events like this. 
+Download the Dev Day code [here](https://snowflake-lab.s3-us-west-2.amazonaws.com/public/docs/slalom-aws-devday-2019-app.zip) and save to a location on your disk you can refer to later.
 
 ### Log into AWS
 
-We'll have them log into AWS and change the default password we gave them. This is probably a good time to have them navigate to SSM and retrieve the `snowflake_user` password they will use during the Snowflake steps.
+Log into the AWS account provided for the Dev Day. You can reach the sign-in console [here](https://workshops-innovationlab.signin.aws.amazon.com/console). Once logged in, you'll retrieve the password to be used with Snowflake in a later step.s
+
+1. Log into AWS using your username/password  
+![alt text](images/awssetup-001.png)
+2. Change your password to something you can remember
+![alt text](images/awssetup-002.png)
+3. Navigate to AWS Systems Manager and click 'Parameter Store'
+![alt text](images/awssetup-003.png)
+4. Retrieve the `snowflake_user` password you will use during the Snowflake steps. It will be stored under `/airflow-ecs/SnowflakeCntl`
+![alt text](images/awssetup-004.png)
 
 ## Setting Up Snowflake
 
@@ -57,7 +67,7 @@ Open the `deploy_source.sql` script in the Snowflake UI. We'll take a walk throu
 
 #
 
-## Setting up AWS
+## Building the Pipeline in AWS
 
 ### Deploy Foundational Components - Instructor Only
 
@@ -65,7 +75,7 @@ Now that they have Snowflake installed, how can they leverage AWS to automatical
 
 ### Deploy Airflow Running on ECS Fargate
 
-Talk about what Airflow is and why we're using it. Talk about how we could really use any workflow engine here, and run whatever we like on ECS Fargate
+The framework uses [Apache Airflow](https://airflow.apache.org/) for the workflow engine. ECS Fargate allows us to use any application built using a Docker image.
 
 1. Log into AWS and navigate to Cloud Formation.
 ![alt text](images/image-09.png)
