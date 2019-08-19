@@ -24,13 +24,13 @@ Download the Dev Day code [here](https://snowflake-lab.s3-us-west-2.amazonaws.co
 
 ### Log into AWS
 
-Log into the AWS account provided for the Dev Day. You can reach the sign-in console [here](https://workshops-innovationlab.signin.aws.amazon.com/console). Once logged in, you'll retrieve the password to be used with Snowflake in a later step.s
+Log into the AWS account provided for the Dev Day. You can reach the sign-in console [here](https://workshops-innovationlab.signin.aws.amazon.com/console). Once logged in, you'll retrieve the password to be used with Snowflake in a later step.
 
 1. Log into AWS using your username/password  
 ![alt text](images/awssetup-001.png)
 2. Change your password to something you can remember
 ![alt text](images/awssetup-002.png)
-3. Navigate to AWS Systems Manager and click 'Parameter Store'
+3. Navigate to AWS Systems Manager and click 'Parameter Store'. SSM Parameter Store is used to store passwords in an encrypted format.
 ![alt text](images/awssetup-003.png)
 4. Retrieve the `snowflake_user` password you will use during the Snowflake steps. It will be stored under `/airflow-ecs/SnowflakeCntl`
 ![alt text](images/awssetup-004.png)
