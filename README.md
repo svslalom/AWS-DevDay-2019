@@ -22,7 +22,7 @@ Download the Dev Day code [here](https://snowflake-lab.s3-us-west-2.amazonaws.co
 
 ### Log into AWS
 
-Log into the AWS account provided for the Dev Day. You can reach the sign-in console [here](https://workshops-innovationlab.signin.aws.amazon.com/console). Once logged in, you'll retrieve the password to be used with Snowflake in a later step.
+Log into the AWS account provided for the Dev Day. You can reach the sign-in console [here](https://workshops-innovationlab.signin.aws.amazon.com/console). Once logged in, you'll retrieve the password to be used with Snowflake in a later step. Be sure to select the Oregon region in the AWS console.
 
 1. Log into AWS using your username/password  
 ![alt text](images/awssetup-001.png)
@@ -73,13 +73,13 @@ Now we have the Snowflake components installed, how can we leverage AWS to autom
 
 The framework uses [Apache Airflow](https://airflow.apache.org/) for the workflow engine. ECS Fargate allows us to use any application built using a Docker image.
 
-1. Log into AWS and navigate to Cloud Formation.
+1. Log into AWS and navigate to CloudFormation.
 ![alt text](images/image-09.png)
-2. On the main Cloud Formation page, you'll see that a stack called `ecs-fargate-network` has already been created. This stack contains the core networking infrastucture, including the VPC, subnets, security groups, and ECS cluster, that we'll use as a foundation for our next deployment.
+2. On the main CloudFormation page, you'll see that a stack called `ecs-fargate-network` has already been created. This stack contains the core networking infrastucture, including the VPC, subnets, security groups, and ECS cluster, that we'll use as a foundation for our next deployment.
 ![alt text](images/image-10.png)
 3. Click the Create Stack button at the top right of the page. In the "Specify template" section, select "Upload a template file". Click "Choose file" and navigate to the location where the project repository is cloned. Select the `cloudformation/private-subnet-pubilc-service.yml` file. Click Next.
 ![alt text](images/image-12.png)
-4. On the next page, you'll see a list of parameters that we need to set. These will be injected into the Cloud Formation stack creation and will enable you to connect to Airflow from your computer once the ECS task is up and running. Set the following parameters then click Next:
+4. On the next page, you'll see a list of parameters that we need to set. These will be injected into the CloudFormation stack creation and will enable you to connect to Airflow from your computer once the ECS task is up and running. Set the following parameters then click Next:
     - Stack name: `ecs-airflow-<your name>`
     - AllowWebCidrIp: `<your IP address>`  (Note: this will be the same value for everyone in the room)
     - Snowflake account: this can be derived from the URL of your Snowlake account. For example: if the URL for your account is `https://ms72259.us-east-1.snowflakecomputing.com/`, then the account ID is `ms72259.us-east-1`
@@ -91,7 +91,7 @@ The framework uses [Apache Airflow](https://airflow.apache.org/) for the workflo
 ![alt text](images/image-17.png)
 7. Now that the stack has been created, navigate to ECS and select the single cluster that is running. 
 ![alt text](images/image-19.png)
-8. On the cluster details page, select the Tasks tab and find the task with a task definition name that corresponds to the name you gave your Cloud Formation stack.
+8. On the cluster details page, select the Tasks tab and find the task with a task definition name that corresponds to the name you gave your CloudFormation stack.
 ![alt text](images/image-20.png)
 9. Select the task to view the task details. In the Network section, copy the Public IP address and paste it in your browser address bar. Append `:8080` to the IP address and navigate to the page. You should see the Airflow user interface.
 ![alt text](images/image-21.png)
@@ -183,7 +183,7 @@ RDS/ECS will take about 10 minutes to launch. We'll use this time to walk throug
 
 ### Run the Pipeline
 
-Launch Airflow on ECS Task public IP port 8080. Run the Source pipeline to load Source tables. Run Analytics pipeline to load Analytics tables. This will take some time to load. Go back to Snowflake and see the History tab, you can see Snowflake running the jobs and loading data. When it's done, Airflow UI will report success. We know it will since we've run this a billion times. Run a quick SQL query to see the data in the tables `query_analytics.sql`. Hey that's cool but we can do so much more, with Tableau!
+Launch Airflow on ECS Task public IP port 8080. Run the Source pipeline to load Source tables. Run Analytics pipeline to load Analytics tables. This will take some time to load. Go back to Snowflake and see the History tab, you can see Snowflake running the jobs and loading data. When it's done, Airflow UI will report success. We know it will since we've run this a billion times. Run a quick SQL query to see the data in the tables `query_analytics.sql`. Hey that's cool but we can do so much more, with Tableau Desktop!
 
 1. In the Airflow UI, you should see two DAGs, `snowflake_analytics` and `snowflake_source`. Toggle the `snowflake_source` switch to On and select the Trigger Dag button in the Links section of the DAG row. When prompted to run the DAG, click OK.
 ![alt text](images/image-23.png)
