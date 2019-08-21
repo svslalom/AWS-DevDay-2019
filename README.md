@@ -22,7 +22,7 @@ Download the Dev Day code [here](https://snowflake-lab.s3-us-west-2.amazonaws.co
 
 ### Log into AWS
 
-Log into the AWS account provided for the Dev Day. You can reach the sign-in console [here](https://workshops-innovationlab.signin.aws.amazon.com/console). Once logged in, you'll retrieve the password to be used with Snowflake in a later step. Be sure to select the Oregon region in the AWS console.
+Log into the AWS account provided for the Dev Day. You can reach the sign-in console [here](https://aws.amazon.com/marketplace/management/signin). Use the account alias provided during the Dev Day. Once logged in, you'll retrieve the password to be used with Snowflake in a later step. Be sure to select the Oregon region in the AWS console.
 
 1. Log into AWS using your username/password  
 ![alt text](images/awssetup-001.png)
